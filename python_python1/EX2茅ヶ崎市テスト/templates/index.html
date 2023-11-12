@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Latest Earthquake Information</title>
+</head>
+<body>
+    <h1>Latest Earthquake Information for Chigasaki City</h1>
+    {% if earthquake %}
+        <p><strong>Date and Time:</strong> {{ earthquake.earthquake.time }}</p>
+        <p><strong>Magnitude:</strong> {{ earthquake.earthquake.hypocenter.magnitude }}</p>
+        <p><strong>Depth:</strong> {{ earthquake.earthquake.hypocenter.depth }}</p>
+        <p><strong>Latitude:</strong> {{ earthquake.earthquake.hypocenter.latitude }}</p>
+        <p><strong>Longitude:</strong> {{ earthquake.earthquake.hypocenter.longitude }}</p>
+    {% else %}
+        <p>No recent earthquakes in Chigasaki City.</p>
+    {% endif %}
+</body>
+</html>
