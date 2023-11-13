@@ -3,11 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>最新の地震情報</title>
+    <script>
+        function fetchEarthquakeData() {
+            fetch('https://api.p2pquake.net/v2/history?codes=551&limit=1')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const earthquake = data[0].earthquake;
+                        const name = earthquake.hypocenter.name; // 震央地名
+                        const maxScale = earthquake.maxScale / 10; // 最大震度
+                        const time = earthquake.time; // 発生日時
+
+                        // データを表示する
+                        document.getElementById('earthquake-info').innerHTML = 
+                            `<strong>震央地名:</strong> ${name}<br>` +
+                            `<strong>最大震度:</strong> ${maxScale}<br>` +
+                            `<strong>発生日時:</strong> ${time}`;
+                    }
+                })
+                .catch(error => console.error('データ取得中のエラー:', error));        
+        }
+        
+
+        // ブザー音を再生する関数
+        function playBuzzer() {
+            var audio = new Audio('/static/buzzer.mp3'); // ブザー音のファイルパス
+            audio.play();
+        }
+
+
+        // 60秒ごとにデータを更新
+        setInterval(fetchEarthquakeData, 60000);
+
+        // 初期ロード時にデータ取得
+        fetchEarthquakeData();
+    </script>
 </head>
 <body>
     <h1>最新の地震情報</h1>
-    <p>震央地名: {{ eq_name }}</p>
-    <p>最大震度: {{ max_intensity }}</p>
-    <p>発生日時: {{ eq_datetime }}</p>
+    <div id="earthquake-info"></div>
+    <!-- ブザー音を鳴らすボタン -->
+    <button onclick="playBuzzer()">ブザーを鳴らす</button>
 </body>
 </html>
