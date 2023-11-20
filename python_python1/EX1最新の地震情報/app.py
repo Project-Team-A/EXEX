@@ -23,9 +23,11 @@ def get_earthquake_info():
 def send_earthquake_info():
     while True:
         info = get_earthquake_info()
-        if info and info["earthquake"]["magnitude"] >= 5.0:  # 例えばマグニチュード5.0以上の場合
-            socketio.emit('new_earthquake', {'magnitude': info["earthquake"]["magnitude"]})
-        socketio.sleep(30)  # 例えば30秒ごとにチェック
+        if info:
+            magnitude = info.get("earthquake", {}).get("magnitude")
+            if magnitude and magnitude >= 5.0: #マグニチュード
+                socketio.emit('new_earthquake', {'magnitude': magnitude})
+        socketio.sleep(30) #30秒ごとに
 
 # 地震情報送信用スレッドの開始
 threading.Thread(target=send_earthquake_info, daemon=True).start()
