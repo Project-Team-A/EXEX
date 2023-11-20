@@ -1,22 +1,48 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <script src="https://cdn.socket.io/socket.io-3.1.3.js"></script>
     <meta charset="UTF-8">
     <title>最新の地震情報</title>
     <script>
         function fetchEarthquakeData() {
-            // 既存の地震データ取得関数
+            fetch('https://api.p2pquake.net/v2/history?codes=551&limit=1')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const earthquake = data[0].earthquake;
+                        const name = earthquake.hypocenter.name; // 震央地名
+                        const maxScale = earthquake.maxScale / 10; // 最大震度
+                        const time = earthquake.time; // 発生日時
+
+                        // データを表示する
+                        document.getElementById('earthquake-info').innerHTML = 
+                            `<strong>震央地名:</strong> ${name}<br>` +
+                            `<strong>最大震度:</strong> ${maxScale}<br>` +
+                            `<strong>発生日時:</strong> ${time}`;
+                    }
+                })
+                .catch(error => console.error('データ取得中のエラー:', error));        
+        }
+        
+
+        // ブザー音を再生する関数
+        function playBuzzer() {
+            var audio = new Audio('/static/buzzer.mp3'); // ブザー音のファイルパス
+            audio.play();
         }
 
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        socket.on('new_earthquake', function(data) {
-            alert('新しい地震情報: マグニチュード ' + data.magnitude);
-            // または、ページ内の特定の要素に情報を表示
-        });
+
+        // 60秒ごとにデータを更新
+        setInterval(fetchEarthquakeData, 60000);
+
+        // 初期ロード時にデータ取得
+        fetchEarthquakeData();
     </script>
 </head>
 <body>
-    <!-- 既存のHTMLコンテンツ -->
+    <h1>最新の地震情報</h1>
+    <div id="earthquake-info"></div>
+    <!-- ブザー音を鳴らすボタン -->
+    <button onclick="playBuzzer()">ブザーを鳴らす</button>
 </body>
 </html>
