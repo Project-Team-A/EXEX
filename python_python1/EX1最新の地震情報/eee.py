@@ -1,67 +1,35 @@
+from flask import Flask, render_template
 import requests
-import json
-import RPi.GPIO as GPIO
-import threading
 
-def get_earthquake_info():
-    api_url = "https://www.jma.go.jp/bosai/quake/data/list.json"
-    response = requests.get(api_url)
-    data = response.json()
-    latest_earthquake = data[0]
-    return float(latest_earthquake["magnitude"])
+app = Flask(__name__)
 
-def activate_buzzer(buzzer_pin):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(buzzer_pin, GPIO.OUT)
-
+@app.route('/')
+def index():
+    # 地震情報のAPIエンドポイント
+    p2pquake_url = 'https://api.p2pquake.net/v2/history?codes=551&limit=1'
+    
+    # APIから地震情報を取得
     try:
-        while not stop_buzzer.is_set():
-            GPIO.output(buzzer_pin, GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(buzzer_pin, GPIO.LOW)
-            time.sleep(1)
+        response = requests.get(p2pquake_url)
+        response.raise_for_status()  # ステータスコードが200以外の場合はエラーを発生させる
+        earthquake_info = response.json()[0]  # 最新の地震情報を取得
+    except requests.RequestException as e:
+        earthquake_info = None
+        print(f"Error fetching earthquake data: {e}")
 
-    except KeyboardInterrupt:
-        pass
+    # 地震情報が取得できたかチェック
+    if earthquake_info:
+        # 震央地名
+        eq_name = earthquake_info["earthquake"]["hypocenter"]["name"]
+        # 震度
+        max_intensity = earthquake_info["earthquake"]["maxScale"]
+        # 日時
+        eq_datetime = earthquake_info["earthquake"]["time"]
+    else:
+        eq_name = max_intensity = eq_datetime = "データが取得できませんでした"
 
-    GPIO.cleanup()
+    # 地震情報をHTMLテンプレートに渡してレンダリング
+    return render_template('index.html', eq_name=eq_name, max_intensity=max_intensity, eq_datetime=eq_datetime)
 
-def main():
-    try:
-        buzzer_pin = 17
-        stop_buzzer.clear()
-
-        # ブザーを鳴らすスレッドを開始
-        buzzer_thread = threading.Thread(target=activate_buzzer, args=(buzzer_pin,))
-        buzzer_thread.start()
-
-        while True:
-            magnitude = get_earthquake_info()
-
-            if magnitude >= 5.0:
-                print("地震発生！ Enterキーを押してブザーを停止してください.")
-                input()  # Enterキーが押されるまで待機
-
-                # ブザーを停止
-                stop_buzzer.set()
-                buzzer_thread.join()
-
-                # ブザーのピンをクリーンアップ
-                GPIO.cleanup()
-
-                # スレッドを再作成して新たな地震の発生を待つ
-                stop_buzzer.clear()
-                buzzer_thread = threading.Thread(target=activate_buzzer, args=(buzzer_pin,))
-                buzzer_thread.start()
-
-            time.sleep(300)  # 5分ごとに地震情報を確認
-
-    except KeyboardInterrupt:
-        pass
-
-    finally:
-        GPIO.cleanup()
-
-if __name__ == "__main__":
-    stop_buzzer = threading.Event()
-    main()
+if __name__ == '__main__':
+    app.run(debug=True)
