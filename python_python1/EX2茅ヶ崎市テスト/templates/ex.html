@@ -5,6 +5,9 @@
     <title>茅ヶ崎市 最新地震情報</title>
 </head>
 <body>
+    <button id="testButton">test</button>
+
+    
     <h1>茅ヶ崎市の最新地震情報</h1>
     {% if earthquake %}
         <p><strong>日時：</strong> {{ earthquake.earthquake.time }}</p>
@@ -15,6 +18,36 @@
     {% else %}
         <p>茅ヶ崎市で最近の地震はありません。</p>
     {% endif %}
+        
+    <script>
+    document.getElementById('testButton').addEventListener('click', function() {
+        setTimeout(function() {
+            sendTestData(); // データを送信する関数
+            playBuzzer(); // ブザー音を再生する関数
+        }, 5000); // 5秒後に実行
+    });
+
+    function sendTestData() {
+        // データ送信のコードをここに記述
+        var xhr = new XMLHttpRequest(); // XMLHttpRequest オブジェクトを作成
+        xhr.open("POST", "/path/to/your/server/endpoint", true); // 送信先のURLとメソッドを指定
+        xhr.setRequestHeader("Content-Type", "application/json"); // コンテンツタイプを設定
+        xhr.onreadystatechange = function() { // レスポンスが返ってきた時の処理を記述
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // レスポンスに対する処理
+                console.log("データ送信成功");
+            }
+        };
+        var data = JSON.stringify({ message: "Test Data" }); // 送信するデータ
+        xhr.send(data); // データを送信
+    }
+
+    function playBuzzer() {
+        var audio = new Audio('/static/buzzer.mp3');
+        audio.play();
+    }     
+        
+    </script>
 </body>
 </html>
 
