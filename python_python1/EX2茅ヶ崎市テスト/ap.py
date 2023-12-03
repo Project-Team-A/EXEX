@@ -22,7 +22,7 @@ def index():
     ]
 
     # HTMLテンプレートにテストデータを渡して表示aa
-    return render_template('index.html', earthquake=test_data[0])
+    return render_template('ex.html', earthquake=test_data[0])
 
 if __name__ == '__main__':
     app.run(debug=True)
