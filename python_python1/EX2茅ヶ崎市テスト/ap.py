@@ -26,26 +26,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
-"""""
-# 地震データのAPIエンドポイント
-P2PQUAKE_URL = 'https://api.p2pquake.net/v2/history?codes=551&limit=10'
-
-@app.route('/')
-def index():
-    # 地震データを取得
-    response = requests.get(P2PQUAKE_URL)
-    earthquakes = response.json()
-    
-    # 茅ヶ崎市の地震情報をフィルタリング
-    chigasaki_earthquakes = [eq for eq in earthquakes if '茅ヶ崎市' in eq.get('earthquake', {}).get('hypocenter', {}).get('name', '')]
-    
-    # 最新の地震情報を取得
-    latest_earthquake = chigasaki_earthquakes[0] if chigasaki_earthquakes else None
-    
-    # HTMLテンプレートにデータを渡して表示
-    return render_template('index.html', earthquake=latest_earthquake)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-"""""
