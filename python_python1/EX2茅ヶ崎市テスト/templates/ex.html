@@ -14,15 +14,27 @@
                         const maxScale = earthquake.maxScale / 10; // 最大震度
                         const magnitude = earthquake.hypocenter.magnitude; //マグニチュード
                         const time = earthquake.time; // 発生日時
+                        //const pref = points.pref;
+                        
+                        let pointsHtml = '';
+                            if (data[0].points && data[0].points.length > 0) {
+                                pointsHtml = data[0].points.map(point =>
+                                    `<strong>場所:</strong> ${point.addr}, ${point.pref} - <strong>震度:</strong> ${point.scale}`).join('<br>');
+                        }
+
+
 
                         // データを表示する
                         document.getElementById('real_time_data').innerHTML = 
                             `<strong>震央地名:</strong> ${name}<br>` +
                             `<strong>最大震度:</strong> ${maxScale}<br>` +
                             `<strong>マグニチュード:</strong> ${magnitude}<br>` +
-                            `<strong>発生日時:</strong> ${time}`;
+                            `<strong>発生日時:</strong> ${time}<br><br>` +
+                            //`<strong>場所:</strong> ${point.pref}, ${point.addr}<br>` +
+                            //`<strong>震度:</strong> ${point.scale}<br>` ;
+                            +pointsHtml;
                     }
-                })
+            })
                 .catch(error => console.error('データ取得中のエラー:', error));        
         }
         // 60秒ごとにデータを更新
