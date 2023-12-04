@@ -16,8 +16,9 @@ def index():
         "earthquake": {
           "time": "2023-11-06T12:00:00Z",
           "hypocenter": {
-            "name": "茅ヶ崎市",
-            "magnitude": 5.0,
+            "name": "神奈川県茅ヶ崎市",
+            "magnitude": 3.4,
+            "maxScale": 3,
             "depth": 10,
             "latitude": 35.3302,
             "longitude": 139.4053
