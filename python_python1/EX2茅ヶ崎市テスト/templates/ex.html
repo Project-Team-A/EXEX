@@ -37,9 +37,10 @@
     <div id="real_time_data">ここにリアルタイムデータが表示されます</div>
     <div id="test_data" style="display: none;">
         <!-- Flaskから渡されるテストデータを表示 -->
-        {{ test_data[0].earthquake.hypocenter.name }}<br>
-        {{ test_data[0].earthquake.time }}<br>
-        {{ test_data[0].earthquake.hypocenter.magnitude}}<br>
+        <strong>震央地名:</strong>{{ test_data[0].earthquake.hypocenter.name }}<br>
+        <strong>最大震度:</strong>{{ test_data[0].earthquake.hypocenter.maxScale }}<br>
+        <strong>マグニチュード:</strong>{{ test_data[0].earthquake.hypocenter.magnitude}}<br>
+        <strong>発生日時:</strong>{{ test_data[0].earthquake.time}}<br>
 
 
     
