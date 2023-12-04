@@ -48,6 +48,8 @@
     
     <script>
     document.getElementById('testButton').addEventListener('click', function() {
+        
+            
         // テストデータを表示し、n秒後にリアルタイムデータに戻す
         document.getElementById('real_time_data').style.display = 'none';
         document.getElementById('test_data').style.display = 'block';
@@ -58,7 +60,7 @@
         }, 5000);   //秒数
 
         playBuzzer(); // ブザー音を再生する
-    });
+    })
 
     function playBuzzer() {
         var audio = new Audio('/static/buzzer.mp3'); //ブザーを鳴らす
@@ -68,4 +70,3 @@
     </script>
 </body>
 </html>
-
