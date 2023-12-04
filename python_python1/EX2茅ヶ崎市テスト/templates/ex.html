@@ -50,18 +50,19 @@
     <script>
     document.getElementById('testButton').addEventListener('click', function() {
         
-            
-        // テストデータを表示し、n秒後にリアルタイムデータに戻す
-        document.getElementById('real_time_data').style.display = 'none';
-        document.getElementById('test_data').style.display = 'block';
+        setTimeout(function() {    
+        // n秒後にテストデータを表示し、n秒後にリアルタイムデータに戻す
+            document.getElementById('real_time_data').style.display = 'none';
+            document.getElementById('test_data').style.display = 'block';
     
-        setTimeout(function() {
-            document.getElementById('real_time_data').style.display = 'block';
-            document.getElementById('test_data').style.display = 'none';
-        }, 5000);   //秒数
+            playBuzzer(); // ブザー音を再生する
 
-        playBuzzer(); // ブザー音を再生する
-    })
+            setTimeout(function() {
+                document.getElementById('real_time_data').style.display = 'block';
+                document.getElementById('test_data').style.display = 'none';
+            }, 5000);   //n秒数
+        }, 5000); 
+    });
 
     function playBuzzer() {
         var audio = new Audio('/static/buzzer.mp3'); //ブザーを鳴らす
