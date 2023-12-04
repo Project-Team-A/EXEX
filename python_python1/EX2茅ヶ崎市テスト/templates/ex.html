@@ -5,6 +5,7 @@
     <title>最新地震情報</title>
     <script>
         function fetchEarthquakeData() {
+            console.log("Fetching earthquake data...");//コンソールログ
             fetch('https://api.p2pquake.net/v2/history?codes=551&limit=1')
                 .then(response => response.json())
                 .then(data => {
@@ -27,8 +28,8 @@
             })
                 .catch(error => console.error('データ取得中のエラー:', error));        
         }
-        // 60秒ごとにデータを更新
-        setInterval(fetchEarthquakeData, 60000);
+        // n秒ごとにデータを更新10000=10秒
+        setInterval(fetchEarthquakeData, 10000);
 
         // 初期ロード時にデータ取得
         fetchEarthquakeData();
