@@ -5,6 +5,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    # リアルタイム地震データの取得
+    p2pquake_url = 'https://api.p2pquake.net/v2/history?codes=551&limit=1'
+    response = requests.get(p2pquake_url)
+    real_time_data = response.json()[0] if response.status_code == 200 else None
+
     # テストデータの定義
     test_data = [
       {
@@ -21,8 +26,8 @@ def index():
       }
     ]
 
-    # HTMLテンプレートにテストデータを渡して表示aa
-    return render_template('ex.html', earthquake=test_data[0])
+    # テンプレートにリアルタイムデータとテストデータを渡す
+    return render_template('ex.html', real_time_data=real_time_data, test_data=test_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

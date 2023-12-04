@@ -15,7 +15,7 @@
                         const time = earthquake.time; // 発生日時
 
                         // データを表示する
-                        document.getElementById('earthquake-info').innerHTML = 
+                        document.getElementById('real_time_data').innerHTML = 
                             `<strong>震央地名:</strong> ${name}<br>` +
                             `<strong>最大震度:</strong> ${maxScale}<br>` +
                             `<strong>発生日時:</strong> ${time}`;
@@ -32,33 +32,30 @@
 </head>
 <body>
 
-    <button id="testButton">test</button>   <!--ボタン-->
+    <div id="real_time_data">ここにリアルタイムデータが表示されます</div>
+    <div id="test_data" style="display: none;">
+        <!-- Flaskから渡されるテストデータを表示 -->
+        {{ test_data[0].earthquake.time }}<br>
+        {{ test_data[0].earthquake.hypocenter.name }}<br>
+
+    <button id="testButton">テストデータ表示</button> <!--ボタン-->
 
     <script>
     document.getElementById('testButton').addEventListener('click', function() {
+        // テストデータを表示し、5秒後にリアルタイムデータに戻す
+        document.getElementById('real_time_data').style.display = 'none';
+        document.getElementById('test_data').style.display = 'block';
+    
         setTimeout(function() {
-            sendTestData(); // データを送信する関数
-            playBuzzer(); // ブザー音を再生する関数
-        }, 5000); // 5秒後に実行
+            document.getElementById('real_time_data').style.display = 'block';
+            document.getElementById('test_data').style.display = 'none';
+        }, 5000);
+
+        playBuzzer(); // ブザー音を再生する
     });
 
-    function sendTestData() {
-        // データ送信のコードをここに記述
-        var xhr = new XMLHttpRequest(); // XMLHttpRequest オブジェクトを作成
-        xhr.open("POST", "/path/to/your/server/endpoint", true); // 送信先のURLとメソッドを指定
-        xhr.setRequestHeader("Content-Type", "application/json"); // コンテンツタイプを設定
-        xhr.onreadystatechange = function() { // レスポンスが返ってきた時の処理を記述
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                // レスポンスに対する処理
-                console.log("データ送信成功");
-            }
-        };
-        var data = JSON.stringify({ message: "Test Data" }); // 送信するデータ
-        xhr.send(data); // データを送信
-    }
-
     function playBuzzer() {
-        var audio = new Audio('/static/buzzer.mp3');
+        var audio = new Audio('/static/buzzer.mp3'); //ブザーを鳴らす
         audio.play();
     }     
         
